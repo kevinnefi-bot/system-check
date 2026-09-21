@@ -388,20 +388,66 @@ html, body {
 #message {
   width: 100%;
   max-width: 900px;
-  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.6s ease;
-  will-change: opacity, transform;
+  transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.55s ease;
+  will-change: opacity, transform, filter;
 }
 
+/* ── Default exit: blur + slide up ── */
 #message.out {
   opacity: 0;
   filter: blur(8px);
   transform: translateY(-24px) scale(0.97);
 }
 
+/* ── Down exit: slide down (calm scene transitions) ── */
+#message.out-down {
+  opacity: 0;
+  filter: blur(4px);
+  transform: translateY(32px) scale(0.98);
+  transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.4, 0, 0.2, 1), filter 0.55s ease;
+}
+
+/* ── Scale exit: shrink + blur (dramatic moments) ── */
+#message.out-scale {
+  opacity: 0;
+  filter: blur(12px) brightness(1.4);
+  transform: scale(0.88);
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), filter 0.5s ease;
+}
+
+/* ── Blur exit: fade-to-focus (dreamy transitions) ── */
+#message.out-blur {
+  opacity: 0;
+  filter: blur(16px);
+  transform: translateY(-8px) scale(0.99);
+  transition: opacity 0.6s ease, transform 0.6s ease, filter 0.6s ease;
+}
+
+/* ── Base entrance ── */
 #message.in {
   opacity: 1;
   filter: blur(0);
   transform: translateY(0) scale(1);
+}
+
+/* ── Push entrance (BOM DIAAA moment) ── */
+#message.enter-push {
+  animation: msgEnterPush 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes msgEnterPush {
+  from { opacity: 0; transform: translateX(-32px) scale(0.96); filter: blur(6px); }
+  to   { opacity: 1; transform: translateX(0) scale(1);        filter: blur(0);   }
+}
+
+/* ── Soft push (amarillo reveal) ── */
+#message.enter-soft-push {
+  animation: msgEnterSoftPush 0.8s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+
+@keyframes msgEnterSoftPush {
+  from { opacity: 0; transform: translateY(18px) scale(0.97); filter: blur(4px); }
+  to   { opacity: 1; transform: translateY(0) scale(1);        filter: blur(0);   }
 }
 
 /* ====================================================
@@ -749,12 +795,286 @@ html, body {
   }
 }
 
-/* Reduced motion preference */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+/* ====================================================
+   POLISH PATCH — GOLDEN MOMENT
+   ==================================================== */
+
+/* Warm golden background shift at amarillo */
+#show.golden-moment {
+  background: radial-gradient(circle at 50% 25%, #1f2e58 0%, transparent 55%),
+              radial-gradient(circle at 50% 85%, rgba(255, 200, 60, 0.22) 0%, transparent 50%),
+              radial-gradient(circle at 20% 70%, rgba(20, 32, 68, 0.4) 0%, transparent 45%),
+              var(--night);
+  transition: background 3.5s ease;
+}
+
+#show.golden-moment::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 200, 50, 0.07) 0%, transparent 70%);
+  animation: goldenGlowEnter 3.5s ease forwards;
+}
+
+@keyframes goldenGlowEnter {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ====================================================
+   WORD-BY-WORD REVEAL
+   ==================================================== */
+.word-reveal {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: wordReveal 0.45s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+  animation-delay: var(--wr-delay, 0ms);
+}
+
+@keyframes wordReveal {
+  from { opacity: 0; transform: translateY(10px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+
+/* ====================================================
+   LETTER-BY-LETTER ENTRANCE
+   ==================================================== */
+.letter-entrance {
+  display: inline-block;
+  opacity: 0;
+  animation: letterEntrance 0.35s ease forwards;
+  animation-delay: var(--le-delay, 0ms);
+}
+
+@keyframes letterEntrance {
+  from { opacity: 0; transform: translateY(8px) scale(0.9); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ====================================================
+   FINAL REVEAL CARD
+   ==================================================== */
+.final-reveal {
+  animation: finalRevealEnter 1.2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+
+@keyframes finalRevealEnter {
+  from { opacity: 0; transform: scale(0.93) translateY(20px); filter: blur(8px); }
+  60%  { opacity: 1; filter: blur(0); }
+  to   { opacity: 1; transform: scale(1) translateY(0);       filter: blur(0); }
+}
+
+/* Calm cinematic card for "Pero espera…" */
+.cine-calm {
+  background: radial-gradient(circle at center, rgba(14, 20, 42, 0.80) 0%, rgba(8, 12, 26, 0.4) 75%, transparent 100%);
+}
+
+/* ====================================================
+   SOUND BUTTON — improved micro-interaction
+   ==================================================== */
+#sound {
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+#sound:hover {
+  transform: scale(1.12);
+  box-shadow: 0 6px 20px rgba(255, 215, 94, 0.4);
+}
+
+#sound:active {
+  transform: scale(0.92);
+}
+
+#sound.is-playing {
+  border-color: var(--gold);
+  box-shadow: 0 0 14px rgba(255, 215, 94, 0.35), 0 4px 15px rgba(0, 0, 0, 0.4);
+  animation: soundPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes soundPulse {
+  0%, 100% { box-shadow: 0 0 10px rgba(255, 215, 94, 0.3), 0 4px 15px rgba(0, 0, 0, 0.4); }
+  50%       { box-shadow: 0 0 22px rgba(255, 215, 94, 0.6), 0 4px 15px rgba(0, 0, 0, 0.4); }
+}
+
+/* ====================================================
+   CONTINUE BUTTON — subtle pulse when visible
+   ==================================================== */
+#next:not([hidden]) {
+  animation: nextGlow 2.8s ease-in-out infinite;
+}
+
+@keyframes nextGlow {
+  0%, 100% { box-shadow: 0 8px 25px rgba(0,0,0,0.35), 0 0 12px rgba(255,215,94,0.12); }
+  50%       { box-shadow: 0 8px 25px rgba(0,0,0,0.35), 0 0 24px rgba(255,215,94,0.32); }
+}
+
+#replay:not([hidden]) {
+  animation: replayEntrance 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards, nextGlow 2.8s ease-in-out 0.8s infinite;
+}
+
+@keyframes replayEntrance {
+  from { opacity: 0; transform: scale(0.8) translateY(10px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ====================================================
+   CHARACTER — golden light state
+   ==================================================== */
+#show.golden-moment .character {
+  filter: drop-shadow(0 15px 30px rgba(0,0,0,0.65)) drop-shadow(0 0 20px rgba(255,210,80,0.25));
+  transition: filter 2s ease, transform 0.8s cubic-bezier(0.25,1,0.5,1);
+}
+
+/* ====================================================
+   SIDENOTE — improved wobble
+   ==================================================== */
+.sidenote.sidenote-pop {
+  animation:
+    notePop    0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards,
+    noteWobble 0.5s  ease-in-out 0.6s 2,
+    noteFloat  3.5s  ease-in-out infinite alternate 1.1s;
+}
+
+@keyframes noteWobble {
+  0%   { transform: rotate(-3deg); }
+  30%  { transform: rotate(5deg);  }
+  70%  { transform: rotate(-5deg); }
+  100% { transform: rotate(-3deg); }
+}
+
+/* ====================================================
+   RETRY BUTTON — satisfying press
+   ==================================================== */
+.browser-error button {
+  position: relative;
+  overflow: hidden;
+}
+
+.browser-error button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.18);
+  opacity: 0;
+  border-radius: inherit;
+  transition: opacity 0.15s;
+}
+
+.browser-error button:active::after { opacity: 1; }
+.browser-error button:active {
+  transform: scale(0.96) translateY(1px);
+  box-shadow: 0 1px 3px rgba(26,115,232,0.2);
+}
+
+/* ====================================================
+   AMARILLO WORD — enhanced glow + entrance
+   ==================================================== */
+.word-amarillo {
+  color: var(--gold-bright) !important;
+  font-style: italic;
+  font-weight: 700;
+  display: inline-block;
+  animation: amarilloEntrance 0.6s cubic-bezier(0.34,1.56,0.64,1) forwards, amarilloPulse 2s ease-in-out 0.6s infinite;
+  text-shadow:
+    0 0 20px rgba(255, 215, 94, 0.9),
+    0 0 40px rgba(255, 215, 94, 0.5),
+    0 0 80px rgba(255, 200, 50, 0.3);
+}
+
+@keyframes amarilloEntrance {
+  from { opacity: 0; transform: scale(0.7) rotate(-4deg); }
+  to   { opacity: 1; transform: scale(1)   rotate(0deg); }
+}
+
+/* ====================================================
+   RESPONSIVE — MOBILE ADJUSTMENTS
+   ==================================================== */
+@media (max-width: 768px) {
+  .character {
+    width: clamp(115px, 28vw, 185px);
+    left: clamp(2px, 2vw, 15px);
+    bottom: -5px;
+    opacity: 0.95;
+  }
+
+  #stage {
+    padding: clamp(20px, 4vh, 40px) 14px;
+  }
+
+  .message-card-shield {
+    padding: 18px 12px;
+  }
+
+  .bom-wrap {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .sidenote {
+    font-size: clamp(16px, 4.5vw, 22px) !important;
+    padding: 4px 10px;
+    max-width: calc(100vw - 40px);
+    white-space: normal;
+    word-break: break-word;
   }
 }
+
+@media (max-width: 480px) {
+  .login-card {
+    padding: 24px 18px;
+  }
+
+  .character {
+    width: clamp(105px, 26vw, 150px);
+    left: -5px;
+  }
+
+  #sound {
+    width: 48px;
+    height: 48px;
+    font-size: 18px;
+  }
+}
+
+/* ====================================================
+   REDUCED MOTION — preserve story, remove excess
+   ==================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .word-reveal,
+  .letter-entrance,
+  .dancing-letter,
+  .name-hero-letter {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  #message.enter-push,
+  #message.enter-soft-push {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+
+  .sidenote.sidenote-pop {
+    animation: none !important;
+    opacity: 0.95 !important;
+    transform: rotate(-3deg) !important;
+  }
+
+  .word-amarillo {
+    animation: none !important;
+  }
+
+  #next:not([hidden]),
+  #replay:not([hidden]) {
+    animation: none !important;
+  }
+
+  *, *::before, *::after {
+    transition-duration: 0.1ms !important;
+  }
+}
+
