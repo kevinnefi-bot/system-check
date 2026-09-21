@@ -9,7 +9,6 @@
   <meta property="og:title" content="System Check">
   <meta property="og:description" content="Tap to continue">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://kevinnefi-bot.github.io/system-check/">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="System Check">
   <meta name="twitter:description" content="Tap to continue">
@@ -66,7 +65,7 @@
     <button id="sound" hidden aria-label="Control de música" title="Música">♫</button>
     <div id="character" class="character pose-curl" aria-hidden="true"></div>
     <main id="stage">
-      <div id="bouquet" hidden aria-label="Ramo digital de colores"></div>
+      <div id="bouquet" hidden aria-hidden="true"></div>
       <div id="message" aria-live="polite"></div>
       <button id="next" hidden>TOCA PARA CONTINUAR <span>→</span></button>
       <button id="replay" hidden>VER OTRA VEZ ↻</button>
@@ -74,6 +73,6 @@
   </section>
 
   <!-- Background Music -->
-  <audio id="music" src="./audio/musica.mp3" preload="metadata"></audio>
+  <audio id="music" src="./audio/musica.mp3" preload="auto"></audio>
 </body>
 </html>

@@ -473,6 +473,59 @@ html, body {
   color: #a7b0c7 !important;
 }
 
+/* Sidenote: funny secondary handwritten joke */
+.sidenote {
+  font-family: 'Caveat', cursive, sans-serif !important;
+  font-size: clamp(19px, 3.2vw, 26px) !important;
+  font-weight: 700 !important;
+  color: var(--gold-bright) !important;
+  opacity: 0.95;
+  display: inline-block;
+  margin: 14px auto 0 !important;
+  padding: 4px 16px;
+  background: rgba(255, 215, 94, 0.08);
+  border: 1px dashed rgba(255, 215, 94, 0.4);
+  border-radius: 16px;
+  transform: rotate(-3deg);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+  line-height: 1.3 !important;
+}
+
+.sidenote.sidenote-pop {
+  animation: notePop 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards, noteFloat 3.5s ease-in-out infinite alternate 0.55s;
+}
+
+@keyframes notePop {
+  0% {
+    opacity: 0;
+    transform: scale(0.6) rotate(6deg) translateY(10px);
+  }
+  100% {
+    opacity: 0.95;
+    transform: scale(1) rotate(-3deg) translateY(0);
+  }
+}
+
+@keyframes noteFloat {
+  0% { transform: translateY(0) rotate(-3deg); }
+  100% { transform: translateY(-5px) rotate(-1.5deg); }
+}
+
+/* Subtle emphasis on 'amarillo' trigger */
+.word-amarillo {
+  color: var(--gold-bright) !important;
+  font-style: italic;
+  font-weight: 700;
+  text-shadow: 0 0 20px rgba(255, 215, 94, 0.7), 0 0 40px rgba(255, 215, 94, 0.4);
+  display: inline-block;
+  animation: amarilloPulse 2s ease-in-out infinite;
+}
+
+@keyframes amarilloPulse {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 6px rgba(255, 215, 94, 0.5)); }
+  50% { transform: scale(1.08); filter: drop-shadow(0 0 16px rgba(255, 215, 94, 0.9)); }
+}
+
 /* ====================================================
    4. HERO WORDS & LETTER ANIMATIONS
    ==================================================== */
