@@ -1,0 +1,219 @@
+/* BOUQUET & DIGITAL FLOWER STYLES */
+
+#bouquet {
+  position: relative;
+  width: min(560px, 92vw);
+  height: min(520px, 66vh);
+  max-height: 68svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 25px 35px rgba(0, 0, 0, 0.65));
+  z-index: 6;
+  margin: 0 auto;
+  pointer-events: none;
+}
+
+#bouquet.dragging {
+  /* Smooth inertia when character is dragging it */
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+#bouquet.settled {
+  animation: bouquetSettle 1.1s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+@keyframes bouquetSettle {
+  0% { transform: translateY(20px) scale(0.92) rotate(-3deg); }
+  60% { transform: translateY(-8px) scale(1.03) rotate(1.5deg); }
+  85% { transform: translateY(3px) scale(0.99) rotate(-0.5deg); }
+  100% { transform: translateY(0) scale(1) rotate(0deg); }
+}
+
+.digital-bouquet-canvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 90%;
+  animation: bouquetBreathe 6s ease-in-out infinite alternate;
+}
+
+@keyframes bouquetBreathe {
+  0% { transform: scale(1) rotate(-0.4deg); }
+  50% { transform: scale(1.02) rotate(0.4deg); }
+  100% { transform: scale(0.99) rotate(-0.2deg); }
+}
+
+.bouquet-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.layer-back { z-index: 1; }
+.layer-mid { z-index: 2; }
+.layer-front { z-index: 3; }
+
+.bouquet-paper-back {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.bouquet-paper-front {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.paper-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.45));
+}
+
+.bouquet-item {
+  position: absolute;
+  pointer-events: none;
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+
+.bouquet-item .flower-head {
+  transform-origin: center center;
+  animation: headSway 5s ease-in-out infinite alternate;
+}
+
+.bouquet-item:nth-child(2n) .flower-head {
+  animation-duration: 4.2s;
+  animation-delay: -1.2s;
+}
+
+.bouquet-item:nth-child(3n) .flower-head {
+  animation-duration: 5.6s;
+  animation-delay: -2.4s;
+}
+
+@keyframes headSway {
+  0% { transform: rotate(-3.5deg) scale(0.98); }
+  50% { transform: rotate(0.8deg) scale(1.015); }
+  100% { transform: rotate(3.2deg) scale(1); }
+}
+
+/* Digital Flowers styling */
+.digital-flower {
+  display: block;
+  overflow: visible;
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));
+}
+
+.digital-leaf {
+  display: block;
+  overflow: visible;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25));
+}
+
+/* Flower blooming animation in corners */
+.growing-flower-box {
+  position: fixed;
+  bottom: -15px;
+  z-index: 7;
+  pointer-events: none;
+  transform-origin: bottom center;
+}
+
+.growing-flower-box.corner-left {
+  left: clamp(10px, 4vw, 50px);
+}
+
+.growing-flower-box.corner-right {
+  right: clamp(10px, 4vw, 50px);
+  transform: scaleX(-1);
+}
+
+.growing-stem-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.grow-stem {
+  stroke-dasharray: 380;
+  stroke-dashoffset: 380;
+  animation: growStemAnim 1.6s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
+}
+
+.grow-leaf {
+  opacity: 0;
+  transform-origin: center bottom;
+  animation: growLeafAnim 1s cubic-bezier(0.34, 1.56, 0.64, 1) 0.75s forwards;
+}
+
+.grow-blossom {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -20%) scale(0);
+  animation: blossomPop 1.3s cubic-bezier(0.34, 1.56, 0.64, 1) 1.1s forwards;
+}
+
+@keyframes growStemAnim {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes growLeafAnim {
+  0% { opacity: 0; transform: scale(0) rotate(-20deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+@keyframes blossomPop {
+  0% { transform: translate(-50%, -20%) scale(0) rotate(-45deg); opacity: 0; }
+  70% { transform: translate(-50%, -20%) scale(1.15) rotate(8deg); opacity: 1; }
+  100% { transform: translate(-50%, -20%) scale(1) rotate(0deg); opacity: 1; }
+}
+
+/* Floating golden petal detached from bouquet */
+.floating-golden-petal {
+  filter: drop-shadow(0 0 12px #ffd75e);
+  animation: petalGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes petalGlow {
+  0% { filter: drop-shadow(0 0 8px rgba(255, 215, 94, 0.7)); }
+  100% { filter: drop-shadow(0 0 18px rgba(255, 235, 150, 1)); }
+}
+
+/* Rain of digital flowers */
+.flower-rain-item {
+  position: fixed;
+  top: -15vh;
+  z-index: 4;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.flower-rain-item.depth-front {
+  z-index: 9;
+  filter: blur(1.5px) drop-shadow(0 10px 15px rgba(0,0,0,0.5));
+}
+
+.flower-rain-item.depth-mid {
+  z-index: 5;
+  filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3));
+}
+
+.flower-rain-item.depth-back {
+  z-index: 2;
+  opacity: 0.55;
+  filter: blur(2px);
+}
+
+@media (max-width: 600px) {
+  #bouquet {
+    width: min(360px, 94vw);
+    height: min(350px, 52vh);
+    max-height: 54svh;
+  }
+}
