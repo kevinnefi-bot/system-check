@@ -545,7 +545,222 @@ async function runGlitchToIntro() {
   await wait(500);
   character.classList.add('exit-left');
   await wait(700);
+
+  // Hide static character element while motorcycle intro is active
+  character.style.display = 'none';
+
+  // Blue Motorcycle Cinematic Intro
+  await runMotorcycleSequence();
+
+  // Restore static character element for title sequence
+  character.style.display = '';
+  character.classList.remove('exit-left');
+
   await runTitleSequence();
+}
+
+/* ====================================================================
+   BLUE MOTORCYCLE CINEMATIC INTRO
+   ==================================================================== */
+function createMotorcycleStage() {
+  const stage = document.createElement('div');
+  stage.id = 'moto-stage';
+  stage.className = 'moto-stage';
+  stage.innerHTML = `
+    <div id="moto-headlight-cone" class="moto-headlight-cone"></div>
+    <div class="moto-tracks-wrapper">
+      <svg class="moto-tracks-svg" viewBox="0 0 1000 240" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <clipPath id="tire-clip">
+            <rect id="tire-clip-rect" x="0" y="0" width="0" height="240" />
+          </clipPath>
+        </defs>
+        <path d="M 0,165 L 1000,165" stroke="#334155" stroke-width="4" stroke-dasharray="10,6" opacity="0.5" />
+        <g clip-path="url(#tire-clip)">
+          <text id="tire-bom-text" x="500" y="150" text-anchor="middle" class="tire-track-text">BOM DIAAA…</text>
+        </g>
+        <path id="skid-mark-path" d="" fill="none" stroke="#0f172a" stroke-width="8" stroke-linecap="round" opacity="0" />
+      </svg>
+    </div>
+
+    <div id="moto-vehicle" class="moto-vehicle">
+      <svg class="blue-moto-svg" viewBox="0 0 240 140">
+        <defs>
+          <linearGradient id="moto-blue" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#3b82f6" />
+            <stop offset="50%" stop-color="#1d4ed8" />
+            <stop offset="100%" stop-color="#1e40af" />
+          </linearGradient>
+          <linearGradient id="moto-gold" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#fff176" />
+            <stop offset="50%" stop-color="#ffd75e" />
+            <stop offset="100%" stop-color="#e59819" />
+          </linearGradient>
+          <linearGradient id="moto-metal" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#cbd5e1" />
+            <stop offset="50%" stop-color="#64748b" />
+            <stop offset="100%" stop-color="#334155" />
+          </linearGradient>
+          <radialGradient id="headlight-bulb" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#ffffff" />
+            <stop offset="40%" stop-color="#ffea79" />
+            <stop offset="100%" stop-color="#ffd75e" />
+          </radialGradient>
+          <filter id="moto-shadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="8" stdDeviation="5" flood-color="#000" flood-opacity="0.5" />
+          </filter>
+        </defs>
+        <g filter="url(#moto-shadow)">
+          <path d="M 60,110 L 130,112 L 145,106" fill="none" stroke="url(#moto-metal)" stroke-width="7" stroke-linecap="round" />
+          <circle cx="55" cy="110" r="4" fill="#ffd75e" opacity="0.8" />
+          <g class="moto-wheel wheel-back" transform="translate(50, 100)">
+            <circle cx="0" cy="0" r="28" fill="#0f172a" stroke="#1e293b" stroke-width="3" />
+            <circle cx="0" cy="0" r="22" fill="none" stroke="url(#moto-blue)" stroke-width="2" />
+            <circle cx="0" cy="0" r="16" fill="none" stroke="#475569" stroke-width="1.5" />
+            <circle cx="0" cy="0" r="6" fill="url(#moto-metal)" />
+            <line x1="-22" y1="0" x2="22" y2="0" stroke="#cbd5e1" stroke-width="1.5" />
+            <line x1="0" y1="-22" x2="0" y2="22" stroke="#cbd5e1" stroke-width="1.5" />
+            <line x1="-15" y1="-15" x2="15" y2="15" stroke="#cbd5e1" stroke-width="1.2" />
+            <line x1="-15" y1="15" x2="15" y2="-15" stroke="#cbd5e1" stroke-width="1.2" />
+          </g>
+          <g class="moto-wheel wheel-front" transform="translate(190, 100)">
+            <circle cx="0" cy="0" r="28" fill="#0f172a" stroke="#1e293b" stroke-width="3" />
+            <circle cx="0" cy="0" r="22" fill="none" stroke="url(#moto-blue)" stroke-width="2" />
+            <circle cx="0" cy="0" r="16" fill="none" stroke="#475569" stroke-width="1.5" />
+            <circle cx="0" cy="0" r="6" fill="url(#moto-metal)" />
+            <line x1="-22" y1="0" x2="22" y2="0" stroke="#cbd5e1" stroke-width="1.5" />
+            <line x1="0" y1="-22" x2="0" y2="22" stroke="#cbd5e1" stroke-width="1.5" />
+            <line x1="-15" y1="-15" x2="15" y2="15" stroke="#cbd5e1" stroke-width="1.2" />
+            <line x1="-15" y1="15" x2="15" y2="-15" stroke="#cbd5e1" stroke-width="1.2" />
+          </g>
+          <path d="M 50,100 L 100,75 L 175,70 L 190,100 Z" fill="#0f172a" stroke="#1e293b" stroke-width="2" />
+          <rect x="90" y="80" width="35" height="25" rx="4" fill="url(#moto-metal)" />
+          <line x1="95" y1="85" x2="120" y2="85" stroke="#0f172a" stroke-width="2" />
+          <line x1="95" y1="90" x2="120" y2="90" stroke="#0f172a" stroke-width="2" />
+          <line x1="95" y1="95" x2="120" y2="95" stroke="#0f172a" stroke-width="2" />
+          <line x1="175" y1="55" x2="190" y2="100" stroke="url(#moto-metal)" stroke-width="6" stroke-linecap="round" />
+          <path d="M 80,68 C 90,48 135,45 160,55 C 178,62 185,72 170,78 C 140,82 95,82 80,68 Z" fill="url(#moto-blue)" stroke="#1d4ed8" stroke-width="1.5" />
+          <path d="M 95,58 Q 130,52 155,62" fill="none" stroke="url(#moto-gold)" stroke-width="3" stroke-linecap="round" />
+          <path d="M 40,90 Q 55,75 80,72 L 75,85 Q 50,88 40,90 Z" fill="url(#moto-blue)" />
+          <path d="M 75,68 C 85,67 105,68 115,70 C 110,76 85,76 75,68 Z" fill="#0f172a" stroke="#334155" stroke-width="1" />
+          <path d="M 170,55 L 180,42 L 188,44" fill="none" stroke="url(#moto-metal)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+          <circle cx="188" cy="44" r="3" fill="#0f172a" />
+          <path d="M 182,58 Q 194,56 198,64 Q 192,72 182,70 Z" fill="url(#moto-blue)" />
+          <circle cx="196" cy="64" r="7" fill="url(#headlight-bulb)" />
+        </g>
+      </svg>
+      <div id="moto-rider" class="moto-rider-character pose-curl"></div>
+    </div>
+  `;
+  return stage;
+}
+
+function launchSkidSparks(screenX, screenY) {
+  const colors = ['#ffd75e', '#ffea79', '#f59e0b', '#fff8e1'];
+  for (let i = 0; i < 14; i++) {
+    setTimeout(() => {
+      activeFireworks.push(new FireworkRocket(
+        screenX + (Math.random() - 0.5) * 40,
+        screenY + (Math.random() - 0.5) * 20,
+        colors
+      ));
+    }, i * 20);
+  }
+}
+
+async function runMotorcycleSequence() {
+  const showEl = $('show');
+  const motoStage = createMotorcycleStage();
+  showEl.appendChild(motoStage);
+
+  const vehicle = motoStage.querySelector('#moto-vehicle');
+  const rider = motoStage.querySelector('#moto-rider');
+  const clipRect = motoStage.querySelector('#tire-clip-rect');
+  const wheels = motoStage.querySelectorAll('.moto-wheel');
+  const tireText = motoStage.querySelector('#tire-bom-text');
+  const headlightCone = motoStage.querySelector('#moto-headlight-cone');
+  const skidPath = motoStage.querySelector('#skid-mark-path');
+
+  wheels.forEach(w => w.classList.add('wheel-spin'));
+
+  // 0.4s: Headlight appears
+  await wait(400);
+  headlightCone.classList.add('active');
+
+  // 0.8s - 2.8s: Motorcycle crosses screen from left to target position
+  const isMobile = window.innerWidth < 600;
+  const startX = -320;
+  const targetX = isMobile ? window.innerWidth * 0.42 : window.innerWidth * 0.52;
+  const duration = 2000;
+  const startTime = performance.now();
+
+  await new Promise(resolve => {
+    function animateRide(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easeProgress = progress < 0.5
+        ? 2 * progress * progress
+        : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+
+      const currentX = startX + (targetX - startX) * easeProgress;
+      const bobY = Math.sin(now * 0.02) * 2;
+      vehicle.style.transform = `translate(${currentX}px, ${bobY}px)`;
+
+      // Map rear wheel position to tire track clip mask
+      const rearWheelScreenX = Math.max(0, currentX + (isMobile ? 50 : 90));
+      const viewBoxX = (rearWheelScreenX / window.innerWidth) * 1000;
+      clipRect.setAttribute('width', Math.max(0, viewBoxX));
+
+      if (progress < 1) {
+        requestAnimationFrame(animateRide);
+      } else {
+        resolve();
+      }
+    }
+    requestAnimationFrame(animateRide);
+  });
+
+  // 2.8s - 3.5s: Controlled Skid!
+  wheels.forEach(w => w.classList.remove('wheel-spin'));
+  vehicle.style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
+  vehicle.style.transform = `translate(${targetX}px, 0px) rotate(-14deg)`;
+  rider.className = 'moto-rider-character pose-surprise';
+
+  if (skidPath) {
+    const rearX = (targetX / window.innerWidth) * 1000;
+    skidPath.setAttribute('d', `M ${rearX - 60},165 Q ${rearX - 20},180 ${rearX + 30},165`);
+    skidPath.style.opacity = '0.7';
+  }
+
+  launchSkidSparks(targetX + 30, window.innerHeight * 0.7);
+
+  await wait(450);
+
+  // 3.5s - 4.3s: Settle motorcycle upright & Rider waves
+  vehicle.style.transition = 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+  vehicle.style.transform = `translate(${targetX}px, 0px) rotate(0deg)`;
+  rider.className = 'moto-rider-character pose-wave';
+
+  clipRect.setAttribute('width', '1000');
+
+  await wait(800);
+
+  // 4.3s - 5.2s: Tire track text transforms / glows & Motorcycle zooms away
+  tireText.classList.add('glowing');
+  launchFireworks(3, 200);
+
+  wheels.forEach(w => w.classList.add('wheel-spin'));
+  vehicle.style.transition = 'transform 0.8s cubic-bezier(0.4, 0, 1, 1)';
+  vehicle.style.transform = `translate(${window.innerWidth + 350}px, 0px) rotate(4deg)`;
+  headlightCone.classList.remove('active');
+
+  await wait(750);
+
+  motoStage.style.transition = 'opacity 0.5s ease';
+  motoStage.style.opacity = '0';
+  await wait(500);
+
+  motoStage.remove();
 }
 
 /* ====================================================================
